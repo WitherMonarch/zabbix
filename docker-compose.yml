@@ -19,7 +19,6 @@ services:                                # Define the services (containers) to b
       DB_SERVER_HOST: mysql              # Hostname of the database (name of the MySQL service)
       MYSQL_DATABASE: zabbix             # Database name to connect to
       MYSQL_USER: zabbix                 # Database username
-      MYSQL_SSL_CA: ""
       MYSQL_PASSWORD: zabbix_pass        # Database password
     depends_on:
       - mysql                            # Ensure this service starts after the MySQL service
@@ -35,7 +34,6 @@ services:                                # Define the services (containers) to b
       MYSQL_DATABASE: zabbix             # Database name
       MYSQL_USER: zabbix                 # Database user
       MYSQL_PASSWORD: zabbix_pass        # Database password
-      MYSQL_SSL_CA: ""
       ZBX_SERVER_HOST: zabbix-server     # Hostname of the Zabbix server
       PHP_TZ: America/Toronto           # Timezone for the PHP frontend
     ports:
