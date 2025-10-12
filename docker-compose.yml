@@ -1,0 +1,64 @@
+services:                                # Define the services (containers) to be created
+
+  mysql:                                 # MySQL/MariaDB service
+    image: mariadb:10.5                  # Use MariaDB version 10.5 image
+    container_name: zbx-mysql            # Name of the container
+    environment:                         # Set environment variables for MariaDB
+      MYSQL_ROOT_PASSWORD: Crosemont123!     # Root password for the database
+      MYSQL_DATABASE: zabbix             # Create a database named 'zabbix'
+      MYSQL_USER: zabbix                 # Create a user named 'zabbix'
+      MYSQL_PASSWORD: zabbix_pass        # Password for user 'zabbix'
+    volumes:
+      - zabbix-db:/var/lib/mysql         # Persist database data using named volume
+    restart: unless-stopped              # Restart unless the container is manually stopped
+
+  zabbix-server:                         # Zabbix server service
+    image: zabbix/zabbix-server-mysql:alpine-7.0-latest    # Use lightweight Alpine image of Zabbix server (MySQL variant)
+    container_name: zbx-server           # Name of the container
+    environment:
+      DB_SERVER_HOST: mysql              # Hostname of the database (name of the MySQL service)
+      MYSQL_DATABASE: zabbix             # Database name to connect to
+      MYSQL_USER: zabbix                 # Database username
+      MYSQL_SSL_CA: ""
+      MYSQL_PASSWORD: zabbix_pass        # Database password
+    depends_on:
+      - mysql                            # Ensure this service starts after the MySQL service
+    ports:
+      - "10051:10051"                    # Expose Zabbix server port
+    restart: unless-stopped              # Auto-restart policy
+
+  zabbix-web:                            # Zabbix web frontend service
+    image: zabbix/zabbix-web-nginx-mysql:alpine-7.0-latest # Use Alpine image with Nginx + MySQL support
+    container_name: zbx-web              # Name of the container
+    environment:
+      DB_SERVER_HOST: mysql              # Database host
+      MYSQL_DATABASE: zabbix             # Database name
+      MYSQL_USER: zabbix                 # Database user
+      MYSQL_PASSWORD: zabbix_pass        # Database password
+      MYSQL_SSL_CA: ""
+      ZBX_SERVER_HOST: zabbix-server     # Hostname of the Zabbix server
+      PHP_TZ: America/Toronto           # Timezone for the PHP frontend
+    ports:
+      - "8080:8080"                      # Expose web interface on port 8080
+    depends_on:
+      - zabbix-server                    # Ensure Zabbix server is up before starting this service
+    restart: unless-stopped              # Auto-restart if stopped unexpectedly
+
+  zabbix-agent:
+    image: zabbix/zabbix-agent:alpine-7.0-latest
+    container_name: zbx-agent
+    environment:
+      - ZBX_HOSTNAME=zabbix-server-agent             # Must match Host name in Zabbix UI
+      - ZBX_SERVER_HOST=zabbix-server     # Server hostname in Docker network
+      - ZBX_ACTIVE=1                   # Enable active checks
+    privileged: true                   # Required for host-level metrics
+    volumes:
+      - /:/host:ro                     # Mount entire host filesystem (read-only)
+      - /proc:/host/proc:ro            # Access host process info
+      - /sys:/host/sys:ro              # Access host system info
+      - /var/run:/var/run              # Access host sockets (for some items)
+    restart: unless-stopped
+
+
+volumes:
+  zabbix-db:
