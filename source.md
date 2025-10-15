@@ -70,8 +70,41 @@ max_execution_time = 300
 max_input_time = 300
 
 sudo systemctl restart httpd php-fm
-
 sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/zabbix/conf
 
 
 
+# UNTESTED SECTION
+
+Binaries -> /usr/lib/zabbix/sbin
+Configs -> /etc/zabbix
+Logs -> /var/log/zabbix
+Runtime/PID -> /var/run/zabbix
+Home (optional) -> /usr/lib/zabbix
+
+./configure \
+    --prefix=/usr/lib/zabbix \
+    --sbindir=/usr/lib/zabbix/sbin \
+    --sysconfdir=/etc/zabbix \
+    --localstatedir=/var/lib/zabbix \
+    --runstatedir=/var/run/zabbix \
+    --logdir=/var/log/zabbix \
+    --libdir=/usr/lib/zabbix/lib
+
+# Create system group/user if not exists
+sudo groupadd --system zabbix
+sudo useradd --system -g zabbix -d /usr/lib/zabbix -s /sbin/nologin -c "Zabbix Monitoring System" zabbix
+
+# Create runtime/log directories
+sudo mkdir -p /var/lib/zabbix /var/run/zabbix /var/log/zabbix
+sudo chown -R zabbix:zabbix /var/lib/zabbix /var/run/zabbix /var/log/zabbix
+
+# Optional home directory for MySQL credentials
+sudo mkdir -m 770 -p /usr/lib/zabbix
+sudo chown zabbix:zabbix /usr/lib/zabbix
+
+sudo -u zabbix /usr/lib/zabbix/sbin/zabbix_server -c /etc/zabbix/zabbix_server.conf
+sudo -u zabbix /usr/lib/zabbix/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
+
+# Recommended changes
+sudo cp -a frontends/php/* /var/www/html/zabbix
