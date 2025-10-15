@@ -1,4 +1,4 @@
-# Install from package source
+# Install from package source (AlmaLinux 9)
 * Follow the steps here and come back before creating the database: https://www.zabbix.com/download?zabbix=7.4&os_distribution=alma_linux&os_version=9&components=server_frontend_agent&db=mysql&ws=apache
 * Before creating initial database, run `dnf search mysql` and install **mysql-server** depending on the versions available
 * Enable the mysqld module to start mysql
@@ -13,4 +13,5 @@
 * Make sure to reload the firewall-cmd
   * `sudo firewall-cmd --reload` 
 * Access the webpage from http://ip:80/zabbix
+
   * Default credentials: **Admin**, **zabbix**
