@@ -1,3 +1,4 @@
+# Compile from source (AlmaLinux 9)
 wget https://cdn.zabbix.com/zabbix/sources/stable/7.4/zabbix-7.4.3.tar.gz
 
 tar -xvzf zabbix-7.4.3.tar.gz
