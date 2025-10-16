@@ -109,3 +109,5 @@ sudo -u zabbix /usr/lib/zabbix/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.c
 
 # Recommended changes
 sudo cp -a frontends/php/* /var/www/html/zabbix
+
+https://techexpert.tips/zabbix/
