@@ -123,7 +123,7 @@ sudo chcon -R -t httpd_sys_rw_content_t /etc/ssl/zabbix
 sudo usermod -aG apache zabbix # Add zabbix to apache group so it can read certs
 
 # -------------------------------
-# 2️⃣ Configure Apache HTTPS VirtualHost
+# Configure Apache HTTPS VirtualHost
 # -------------------------------
 sudo tee /etc/httpd/conf.d/zabbix-ssl.conf > /dev/null <<'EOF'
 <VirtualHost *:443>
