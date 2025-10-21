@@ -4,11 +4,6 @@
 dnf install -y haproxy
 ```
 
-```bash
-
-```
-
-
 * Add the maria nodes to /etc/hosts
 ```bash
 192.168.10.203 maria1.rosemont.com maria1
