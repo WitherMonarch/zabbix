@@ -44,3 +44,24 @@ This step ensures the Galera SST authentication works correctly.
 * Add `wsrep_node_name` and `wsrep_sst_auth` in `galera.cnf`.
 * Do not forget to set the root password after `mysql_secure_installation` on the first node.
 * Then run systemctl enable --now mariadb on node1 before node2 and 3
+
+# After each full cluster shutdown, refresh the cluster
+* Make sure mariadb service is stopped on all nodes
+systemctl stop mariadb
+systemctl status mariadb
+
+* Check which node is safe to bootstrap (run on each node, proceed only on the node that returns 1)
+grep safe_to_bootstrap /var/lib/mysql/grastate.dat
+
+* Bootstrap the cluster
+galera_new_cluster
+
+* Check if the **wsrep_cluster_size** is equal to 1
+mysql -u root -p -e "SHOW STATUS LIKE 'wsrep_cluster_size';"
+
+* If **wsrep_cluster_size** is equal to 1, start mariadb on the other 2 nodes
+systemctl start mariadb
+
+* Re-run to check if the **wsrep_cluster_size** is now equal to 3
+mysql -u root -p -e "SHOW STATUS LIKE 'wsrep_cluster_size';"
+
