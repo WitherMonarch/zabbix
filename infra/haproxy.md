@@ -14,7 +14,7 @@ dnf install -y haproxy
 * Backup haproxy.cfg and paste the new contents of haproxy.cfg
 ```bash
 mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.bak
-nano /etc/haproxy/haproxy.cfg
+wget -O /etc/haproxy/haproxy.cfg https://raw.githubusercontent.com/WitherMonarch/zabbix/refs/heads/main/infra/haproxy.cfg
 ```
 
 
@@ -22,8 +22,6 @@ nano /etc/haproxy/haproxy.cfg
 ```bash
 systemctl edit haproxy
 ```
-	### Anything between here and the comment below will become the new contents of the file
-	
 	[Unit]
 	After=keepalived.service
 	Requires=keepalived.service
@@ -31,12 +29,15 @@ systemctl edit haproxy
 	[Service]
 	ExecStartPre=/usr/bin/bash -c 'until ip addr show ens18 | grep -q 192.168.10.210; do sleep 1; done'
 
-	### Lines below this comment will be discarded
-
 * Edit the SELinux and firewalld policies to let HAProxy pass
 ```bash
 setsebool -P haproxy_connect_any 1
-firewall-cmd --permanent --add-port=3306/tcp
+setsebool -P httpd_can_network_connect 1
+setsebool -P zabbix_can_network 1
+firewall-cmd --permanent --add-service=mysql
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=zabbix-server
+firewall-cmd --permanent --add-service=zabbix-agent (if the agent is configured on this machine)
 firewall-cmd --reload
 ```
 
