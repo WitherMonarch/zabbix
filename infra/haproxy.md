@@ -37,7 +37,7 @@ setsebool -P zabbix_can_network 1
 firewall-cmd --permanent --add-service=mysql
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=zabbix-server
-firewall-cmd --permanent --add-service=zabbix-agent (if the agent is configured on this machine)
+firewall-cmd --permanent --add-service=zabbix-agent # (if the agent is configured on this machine)
 firewall-cmd --reload
 ```
 
