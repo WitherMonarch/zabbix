@@ -193,7 +193,7 @@ After=network.target
 Type=simple
 User=zabbix
 Group=zabbix
-ExecStart=/usr/local/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf -f
+ExecStart=/usr/local/sbin/zabbix_agentd -c /usr/local/etc/zabbix_agentd.conf -f
 Restart=on-failure
 
 [Install]
