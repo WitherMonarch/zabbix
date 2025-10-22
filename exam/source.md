@@ -211,6 +211,10 @@ Include:
 * TLSKeyFile=/etc/ssl/zabbix/selfsigned.key
 * TLSFrontendAccept=unencrypted,cert
 
+# Edit zabbix_agentd.conf
+Hostname=SameAsZabbixHostnameOnDashboard
+Server=127.0.0.1
+
 # Enable and start zabbix-server
 sudo systemctl daemon-reload
 sudo systemctl enable --now zabbix-server (zabbix-agent)
