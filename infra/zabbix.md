@@ -46,5 +46,4 @@ systemctl enable --now zabbix-agent # optional
 ```
 
 ### Useful command to check SELinux policies
-
     getsebool -a | grep
