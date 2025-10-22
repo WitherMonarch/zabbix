@@ -153,7 +153,7 @@ sudo firewall-cmd --reload
 sudo systemctl restart httpd
 
 # -------------------------------
-# Zabbix frontend TLS settings (wizard)
+# Zabbix frontend TLS settings (wizard, optional)
 # -------------------------------
 # Open browser: https://<server-ip>/zabbix
 # Use the following TLS settings:
@@ -206,14 +206,15 @@ Include:
 * DBName=zabbix
 * DBUser=zabbix
 * DBPassword=crosemont
+### If not doing tls, skip this
 * TLSCAFile=/etc/ssl/zabbix/selfsigned.crt
 * TLSCertFile=/etc/ssl/zabbix/selfsigned.crt
 * TLSKeyFile=/etc/ssl/zabbix/selfsigned.key
 * TLSFrontendAccept=unencrypted,cert
 
 # Edit zabbix_agentd.conf
-Hostname=SameAsZabbixHostnameOnDashboard
-Server=127.0.0.1
+* Hostname=SameAsZabbixHostnameOnDashboard
+* Server=127.0.0.1
 
 # Enable and start zabbix-server
 sudo systemctl daemon-reload
